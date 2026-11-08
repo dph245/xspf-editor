@@ -20,6 +20,7 @@ Eine vorhandene Playlist lässt sich auch direkt mit `python xspf_editor.py /pfa
 - Unter **Datei** eine Playlist öffnen, neu anlegen, speichern oder unter einem anderen Namen speichern.
 - Sendername und Stream-URL per Doppelklick oder **F2** bearbeiten. **Enter** übernimmt die Eingabe, **Esc** verwirft sie.
 - Mit **Sender hinzufügen** eine Zeile anlegen oder die ausgewählte Zeile mit **Sender löschen** entfernen.
+- Über **Sortieren** die Sendernamen aufsteigend (**A–Z**) oder absteigend (**Z–A**) sortieren. Leere Namen bleiben am Ende. Beim Speichern wird die neue Reihenfolge in die XSPF-Datei übernommen.
 - Eine Zeile mit der Maus an den oberen oder unteren Rand einer anderen Zeile ziehen, um sie davor oder danach einzufügen.
 - Beim Öffnen einer anderen Datei, beim Neuanlegen und beim Schließen fragt der Editor bei ungespeicherten Änderungen nach.
 

@@ -1,4 +1,4 @@
-from PySide6.QtCore import QAbstractTableModel, QModelIndex, Qt
+from PySide6.QtCore import QAbstractTableModel, QCollator, QLocale, QModelIndex, Qt
 
 from playlist import Playlist
 
@@ -47,6 +47,24 @@ class StationModel(QAbstractTableModel):
 
     def supportedDropActions(self):
         return Qt.DropAction.MoveAction
+
+    def sort_by_name(self, *, descending):
+        collator = QCollator(QLocale(QLocale.Language.German))
+        collator.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        tracks = self.playlist.tracks
+        names = {track: self.playlist.field(row, "title").strip() for row, track in enumerate(tracks)}
+        ordered = sorted(
+            (track for track in tracks if names[track]),
+            key=lambda track: collator.sortKey(names[track]),
+            reverse=descending,
+        )
+        ordered.extend(track for track in tracks if not names[track])
+
+        root = QModelIndex()
+        for destination, track in enumerate(ordered):
+            source = tracks.index(track, destination)
+            if source != destination:
+                self.moveRow(root, source, root, destination)
 
     def append_station(self):
         row = self.rowCount()

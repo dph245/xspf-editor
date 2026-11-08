@@ -7,7 +7,7 @@ from xml.parsers.expat import ExpatError, ParserCreate
 from PySide6.QtCore import QIODevice, QSaveFile, Qt
 from PySide6.QtGui import QAction, QKeySequence
 from PySide6.QtWidgets import (
-    QApplication, QFileDialog, QMainWindow, QMessageBox, QTableView, QToolBar,
+    QApplication, QFileDialog, QMainWindow, QMessageBox, QTableView, QToolBar, QToolButton,
 )
 
 from playlist import Playlist
@@ -56,9 +56,17 @@ class Editor(QMainWindow):
         file_menu.addSeparator()
         file_menu.addAction(quit_action)
         edit_menu.addActions([add, self.remove])
+        sort_menu = edit_menu.addMenu("Nach Sendername &sortieren")
+        sort_menu.addAction("Aufsteigend (A–Z)", lambda: self.sort_stations(descending=False))
+        sort_menu.addAction("Absteigend (Z–A)", lambda: self.sort_stations(descending=True))
+        sort_button = QToolButton(toolbar)
+        sort_button.setText("Sortieren")
+        sort_button.setMenu(sort_menu)
+        sort_button.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
         toolbar.addActions([new, open_file, save])
         toolbar.addSeparator()
         toolbar.addActions([add, self.remove])
+        toolbar.addWidget(sort_button)
 
         self.table.selectionModel().selectionChanged.connect(self.update_selection)
         self.model.modelReset.connect(self.update_selection)
@@ -127,6 +135,10 @@ class Editor(QMainWindow):
         selection = self.table.selectionModel().selectedRows()
         if selection:
             self.model.removeRow(selection[0].row())
+
+    def sort_stations(self, *, descending):
+        self.table.setFocus()
+        self.model.sort_by_name(descending=descending)
 
     def save(self):
         self.table.setFocus()
